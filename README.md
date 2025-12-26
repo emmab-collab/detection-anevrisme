@@ -186,17 +186,17 @@ results/
 
 ### Limitations de la Version Démonstration
 
-- ⚠️ **Données limitées** : 20 séries vs 4000 sur Kaggle
-- ⚠️ **Performances** : Résultats non représentatifs (échantillon trop petit)
-- ⚠️ **Usage** : Démonstration de l'architecture uniquement
+- **Données limitées** : 20 séries vs 4000 sur Kaggle
+- **Performances** : Résultats non représentatifs (échantillon trop petit)
+- **Usage** : Démonstration de l'architecture uniquement
 
 ### Points Forts du Projet
 
-- ✅ **Architecture modulaire** : Code réutilisable et maintenable
-- ✅ **Multi-modalités** : Support de 4 types d'imagerie médicale
-- ✅ **Pipeline complet** : De DICOM brut à modèle entraîné
-- ✅ **Gestion d'erreurs** : Robuste aux données manquantes
-- ✅ **Documentation** : Code commenté et notebooks explicatifs
+- **Architecture modulaire** : Code réutilisable et maintenable
+- **Multi-modalités** : Support de 4 types d'imagerie médicale
+- **Pipeline complet** : De DICOM brut à modèle entraîné
+- **Gestion d'erreurs** : Robuste aux données manquantes
+- **Documentation** : Code commenté et notebooks explicatifs
 
 ---
 
@@ -227,19 +227,19 @@ results/
 ### Trade-offs Architecturaux
 
 **Choix 1 : .npz vs HDF5**
-- ✅ Choisi `.npz` pour sa simplicité et compatibilité NumPy native
-- ⚠️ Trade-off : Moins performant que HDF5 pour très gros datasets (> 10GB)
-- 📊 Impact : Acceptable pour démo (6.3MB total), à reconsidérer pour production
+- Choisi `.npz` pour sa simplicité et compatibilité NumPy native
+- Trade-off : Moins performant que HDF5 pour très gros datasets (> 10GB)
+- Impact : Acceptable pour démo (6.3MB total), à reconsidérer pour production
 
 **Choix 2 : Cubes fixes 48×48×48 vs tailles variables**
-- ✅ Cubes fixes pour batch processing efficace en PyTorch
-- ⚠️ Trade-off : Perte d'information pour grands anévrismes
-- 📊 Impact : Simplifie l'entraînement, couvre 95%+ des cas cliniques
+- Cubes fixes pour batch processing efficace en PyTorch
+- Trade-off : Perte d'information pour grands anévrismes
+- Impact : Simplifie l'entraînement, couvre 95%+ des cas cliniques
 
 **Choix 3 : Preprocessing synchrone vs pipeline asynchrone**
-- ✅ Synchrone pour traçabilité et debugging
-- ⚠️ Trade-off : Temps de traitement plus long (20min pour 20 séries)
-- 📊 Impact : Acceptable pour démo, optimisable avec multiprocessing en production
+- Synchrone pour traçabilité et debugging
+- Trade-off : Temps de traitement plus long (20min pour 20 séries)
+- Impact : Acceptable pour démo, optimisable avec multiprocessing en production
 
 ### Compétences Développées
 
