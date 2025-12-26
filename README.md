@@ -252,7 +252,7 @@ results/
 
 ## 📚 Références
 
-- **Dataset source** : [RSNA Intracranial Hemorrhage Detection](https://www.kaggle.com/competitions/rsna-intracranial-hemorrhage-detection)
+- **Dataset source** : [RSNA Intracranial Aneurysm Detection](https://www.kaggle.com/competitions/rsna-intracranial-aneurysm-detection)
 - **Architecture** : Inspired by 3D ResNet for medical imaging
 - **PyDICOM Documentation** : [https://pydicom.github.io/](https://pydicom.github.io/)
 - **Medical Imaging Resources** : [RadioGraphics RSNA](https://pubs.rsna.org/journal/radiographics)
@@ -263,7 +263,7 @@ results/
 
 **Emma B.**
 
-*Data Scientist spécialisée en Deep Learning pour l'imagerie médicale*
+*Étudiante en L3 Mathématiques | Autodidacte en Machine Learning | Passionnée de ML appliqué à la santé*
 
 ---
 
