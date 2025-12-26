@@ -146,14 +146,16 @@ results/
 
 ### Datasets de Démonstration Créés
 
-| Modalité | Séries | Cubes positifs | Cubes négatifs | Balance |
-|----------|--------|----------------|----------------|---------|
-| CTA | 9 | ~6 | ~X | XX% |
-| MRA | 3 | ~2 | ~X | XX% |
-| MRI T2 | 7 | ~1 | ~X | XX% |
-| MRI T1post | 1 | 0 | ~X | XX% |
+| Modalité | Séries | Cubes positifs | Cubes négatifs | Total | Balance |
+|----------|--------|----------------|----------------|-------|---------|
+| **CTA** | 9 | 8 | 15 | 23 | 34.8% |
+| **MRA** | 3 | 2 | 5 | 7 | 28.6% |
+| **MRI T2** | 7 | 1 | 25 | 26 | 3.8% |
+| **MRI T1post** | 1 | 0 | 5 | 5 | 0.0% |
 
-*Note : Les valeurs exactes dépendent du nombre de cubes extraits par volume*
+**Total : 61 cubes 3D (48×48×48) extraits de 20 séries DICOM**
+
+*Note : Ces datasets sont disponibles dans `results/processed/` au format `.npz`*
 
 ### Utilisation Recommandée
 

@@ -4,6 +4,7 @@ Patient metadata extraction utilities.
 
 import os
 import pandas as pd
+import ast
 from ..config import ANEURYSM_POSITIONS
 
 
@@ -47,6 +48,57 @@ def get_position(df_train, patient_path):
     patient_id = get_patient_ID(patient_path)
     row = df_train[df_train["SeriesInstanceUID"] == patient_id][ANEURYSM_POSITIONS].values.flatten()
     return row
+
+
+def parse_coordinates(coordinates_str):
+    """
+    Parse coordinates string to extract x, y, z values.
+
+    Parameters
+    ----------
+    coordinates_str : str
+        String representation of coordinates dict (e.g., "{'x': 1.0, 'y': 2.0}")
+
+    Returns
+    -------
+    tuple
+        (x, y, z) coordinates. z is 0.0 if not present.
+    """
+    try:
+        coords_dict = ast.literal_eval(coordinates_str)
+        x = coords_dict.get('x', 0.0)
+        y = coords_dict.get('y', 0.0)
+        z = coords_dict.get('z', 0.0)
+        return x, y, z
+    except:
+        return 0.0, 0.0, 0.0
+
+
+def expand_coordinates(df_localizers):
+    """
+    Expand the 'coordinates' column into separate x, y, z columns.
+
+    Parameters
+    ----------
+    df_localizers : pd.DataFrame
+        DataFrame with 'coordinates' column (string format)
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with added 'x', 'y', 'z' columns
+    """
+    df = df_localizers.copy()
+
+    # Parse coordinates
+    coords = df['coordinates'].apply(parse_coordinates)
+
+    # Add as separate columns
+    df['x'] = coords.apply(lambda c: c[0])
+    df['y'] = coords.apply(lambda c: c[1])
+    df['z'] = coords.apply(lambda c: c[2])
+
+    return df
 
 
 def ajouter_Modality(df_main, df_info):

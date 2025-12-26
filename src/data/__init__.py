@@ -10,7 +10,8 @@ from .dicom_loader import (
 from .metadata import (
     get_patient_ID,
     get_position,
-    ajouter_Modality
+    ajouter_Modality,
+    expand_coordinates
 )
 
 __all__ = [
@@ -19,5 +20,6 @@ __all__ = [
     'coordonnee_z',
     'get_patient_ID',
     'get_position',
-    'ajouter_Modality'
+    'ajouter_Modality',
+    'expand_coordinates'
 ]

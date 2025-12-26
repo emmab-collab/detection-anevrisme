@@ -102,12 +102,30 @@ class DatasetBuilder:
         pad_y = max(0, target_size - cube.shape[1])
         pad_z = max(0, target_size - cube.shape[2])
 
+        # Centrer le padding
+        pad_x_before = pad_x // 2
+        pad_x_after = pad_x - pad_x_before
+        pad_y_before = pad_y // 2
+        pad_y_after = pad_y - pad_y_before
+        pad_z_before = pad_z // 2
+        pad_z_after = pad_z - pad_z_before
+
         padded = np.pad(
             cube,
-            ((0, pad_x), (0, pad_y), (0, pad_z)),
+            ((pad_x_before, pad_x_after), (pad_y_before, pad_y_after), (pad_z_before, pad_z_after)),
             mode='constant',
             constant_values=0
         )
+
+        # Vérifier la taille finale
+        if padded.shape != (target_size, target_size, target_size):
+            # Fallback: crop ou pad pour atteindre exactement la taille cible
+            result = np.zeros((target_size, target_size, target_size), dtype=padded.dtype)
+            min_x = min(padded.shape[0], target_size)
+            min_y = min(padded.shape[1], target_size)
+            min_z = min(padded.shape[2], target_size)
+            result[:min_x, :min_y, :min_z] = padded[:min_x, :min_y, :min_z]
+            return result
 
         return padded
 
@@ -212,7 +230,7 @@ class DatasetBuilder:
 
                 # Get coordinates et position
                 coords = np.array([row['x'], row['y'], row['z']])
-                position_name = get_position(row)
+                position_name = row.get('location', 'Unknown')
 
                 # Preprocessing
                 volume, transformed_coords = self.preprocessor.process_volume_with_coords(
@@ -300,6 +318,31 @@ class DatasetBuilder:
             'patient_ids': patient_ids
         }
 
+    def _filter_available_series(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Filtre le DataFrame pour ne garder que les séries disponibles localement.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            DataFrame avec colonne 'SeriesInstanceUID'
+
+        Returns
+        -------
+        pd.DataFrame
+            DataFrame filtré avec seulement les séries existantes
+        """
+        if self.series_dir is None:
+            return df
+
+        available_series = []
+        for series_uid in df['SeriesInstanceUID'].unique():
+            patient_path = os.path.join(self.series_dir, series_uid)
+            if os.path.exists(patient_path):
+                available_series.append(series_uid)
+
+        return df[df['SeriesInstanceUID'].isin(available_series)].reset_index(drop=True)
+
     def build_dataset(
         self,
         df_train: pd.DataFrame,
@@ -329,6 +372,11 @@ class DatasetBuilder:
 
         # Filter by modality
         df_modality = df_train[df_train['Modality'] == modality].reset_index(drop=True)
+        print(f"Total {modality} series in CSV: {len(df_modality)}")
+
+        # Filter only locally available series
+        df_modality = self._filter_available_series(df_modality)
+        print(f"Available {modality} series locally: {len(df_modality)}")
 
         # Split positives and negatives
         df_positives = df_modality[df_modality['Aneurysm Present'] == 1]
@@ -339,25 +387,48 @@ class DatasetBuilder:
             df_localizers['SeriesInstanceUID'].isin(df_positives['SeriesInstanceUID'])
         ]
 
-        print(f"Found {len(df_pos_loc)} positive series")
-        print(f"Found {len(df_negatives)} negative series")
+        print(f"Positive series: {len(df_positives)}")
+        print(f"Negative series: {len(df_negatives)}")
 
         # Extract cubes
         positive_data = self.extract_positive_cubes(df_pos_loc)
         negative_data = self.extract_negative_cubes(df_negatives)
 
-        # Combine
-        dataset = {
-            'cubes': np.concatenate([positive_data['cubes'], negative_data['cubes']]),
-            'labels': np.concatenate([positive_data['labels'], negative_data['labels']]),
-            'positions': np.concatenate([positive_data['positions'], negative_data['positions']]),
-            'patient_ids': positive_data['patient_ids'] + negative_data['patient_ids']
-        }
+        # Combine - handle empty cases
+        if len(positive_data['cubes']) == 0 and len(negative_data['cubes']) == 0:
+            print("\n⚠️ No cubes extracted for this modality")
+            return {
+                'cubes': np.array([]),
+                'labels': np.array([]),
+                'positions': np.array([]).reshape(0, 13),
+                'patient_ids': []
+            }
+        elif len(positive_data['cubes']) == 0:
+            dataset = {
+                'cubes': negative_data['cubes'],
+                'labels': negative_data['labels'],
+                'positions': negative_data['positions'],
+                'patient_ids': negative_data['patient_ids']
+            }
+        elif len(negative_data['cubes']) == 0:
+            dataset = {
+                'cubes': positive_data['cubes'],
+                'labels': positive_data['labels'],
+                'positions': positive_data['positions'],
+                'patient_ids': positive_data['patient_ids']
+            }
+        else:
+            dataset = {
+                'cubes': np.concatenate([positive_data['cubes'], negative_data['cubes']]),
+                'labels': np.concatenate([positive_data['labels'], negative_data['labels']]),
+                'positions': np.concatenate([positive_data['positions'], negative_data['positions']]),
+                'patient_ids': positive_data['patient_ids'] + negative_data['patient_ids']
+            }
 
         print(f"\nDataset created:")
         print(f"  Total cubes: {len(dataset['cubes'])}")
-        print(f"  Positive: {positive_data['labels'].sum()}")
-        print(f"  Negative: {negative_data['labels'].sum()}")
+        print(f"  Positive: {int(dataset['labels'].sum())}")
+        print(f"  Negative: {int((1 - dataset['labels']).sum())}")
 
         return dataset
 
