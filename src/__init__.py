@@ -32,6 +32,19 @@ from .config import (
     ANEURYSM_POSITIONS
 )
 
+# Import paths configuration
+from .paths import (
+    SERIES_DIR,
+    TRAIN_CSV,
+    TRAIN_LOCALIZERS_CSV,
+    OUTPUT_DIR,
+    PROCESSED_DIR,
+    MODELS_DIR,
+    CHECKPOINTS_DIR,
+    IS_KAGGLE,
+    print_config
+)
+
 # Import data utilities
 from .data import (
     dicom_to_numpy,
@@ -79,6 +92,17 @@ __all__ = [
     'DEFAULT_MAX_DISPLACEMENT',
     'DEFAULT_N_AUGMENTATIONS',
     'ANEURYSM_POSITIONS',
+
+    # Paths
+    'SERIES_DIR',
+    'TRAIN_CSV',
+    'TRAIN_LOCALIZERS_CSV',
+    'OUTPUT_DIR',
+    'PROCESSED_DIR',
+    'MODELS_DIR',
+    'CHECKPOINTS_DIR',
+    'IS_KAGGLE',
+    'print_config',
 
     # Data
     'dicom_to_numpy',

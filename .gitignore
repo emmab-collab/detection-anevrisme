@@ -80,6 +80,9 @@ env/
 profile_default/
 ipython_config.py
 
+# Note: nbstripout is configured to auto-clean notebook outputs before commit
+# Run: nbstripout --install (already done)
+
 # ============================================================================
 # IDE / EDITOR
 # ============================================================================
