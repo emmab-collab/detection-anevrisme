@@ -1,4 +1,4 @@
-# Détection d'Anévrismes Cérébraux par Deep Learning 🧠
+# Détection d'Anévrismes Cérébraux par Deep Learning
 
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.7+-ee4c2c.svg)](https://pytorch.org/)
@@ -9,7 +9,7 @@ Projet de détection automatique d'anévrismes cérébraux à partir d'images m�
 
 ---
 
-## 📊 À propos de ce Repository
+## À propos de ce Repository
 
 ### Version de Démonstration
 
@@ -31,7 +31,7 @@ Ce repository contient une **version de démonstration locale** d'un projet plus
 
 ---
 
-## 🏗️ Architecture du Projet
+## Architecture du Projet
 
 Le projet suit une **architecture modulaire brick-based** pour une réutilisabilité maximale :
 
@@ -61,7 +61,7 @@ src/
 
 ---
 
-## 📁 Structure des Données
+## Structure des Données
 
 ### Modalités Supportées
 
@@ -95,7 +95,7 @@ Chaque modalité génère un fichier `.npz` contenant :
 
 ---
 
-## 📓 Notebooks
+## Notebooks
 
 | Notebook | Description | Usage |
 |----------|-------------|-------|
@@ -109,7 +109,7 @@ Chaque modalité génère un fichier `.npz` contenant :
 
 ---
 
-## 🚀 Utilisation
+## Utilisation
 
 ### Prérequis
 
@@ -147,7 +147,7 @@ results/
 
 ---
 
-## 🎯 Résultats de la Démonstration
+## Résultats de la Démonstration
 
 ### Datasets de Démonstration Créés
 
@@ -171,7 +171,7 @@ results/
 
 ---
 
-## 🔧 Technologies
+## Technologies
 
 - **Python 3.13+**
 - **PyTorch** : Deep Learning
@@ -182,7 +182,7 @@ results/
 
 ---
 
-## 📝 Notes Importantes
+## Notes Importantes
 
 ### Limitations de la Version Démonstration
 
@@ -200,7 +200,7 @@ results/
 
 ---
 
-## 💡 Ce que j'ai appris / What I Learned
+## Ce que j'ai appris / What I Learned
 
 ### Défis Techniques Rencontrés
 
@@ -250,7 +250,7 @@ results/
 
 ---
 
-## 📚 Références
+## Références
 
 - **Dataset source** : [RSNA Intracranial Aneurysm Detection](https://www.kaggle.com/competitions/rsna-intracranial-aneurysm-detection)
 - **Architecture** : Inspired by 3D ResNet for medical imaging
@@ -259,7 +259,7 @@ results/
 
 ---
 
-## 👤 Auteur
+## Auteur
 
 **Emma B.**
 
@@ -268,7 +268,7 @@ results/
 
 ---
 
-## 📄 License
+## License
 
 Ce projet est à usage éducatif et de démonstration pour portfolio professionnel.
 
