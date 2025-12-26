@@ -1,5 +1,10 @@
 # Détection d'Anévrismes Cérébraux par Deep Learning 🧠
 
+[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.7+-ee4c2c.svg)](https://pytorch.org/)
+[![License](https://img.shields.io/badge/license-Educational-green.svg)](LICENSE)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 Projet de détection automatique d'anévrismes cérébraux à partir d'images médicales 3D (CTA, MRA, MRI) utilisant des réseaux de neurones convolutifs 3D.
 
 ---
@@ -195,10 +200,62 @@ results/
 
 ---
 
+## 💡 Ce que j'ai appris / What I Learned
+
+### Défis Techniques Rencontrés
+
+**1. Gestion Multi-Modalités**
+- **Défi** : Les 4 modalités d'imagerie (CTA, MRA, MRI T2, MRI T1post) ont des caractéristiques très différentes (résolution, contraste, espacement voxel)
+- **Solution** : Architecture de preprocessing adaptative avec resampling intelligent et normalisation par modalité
+- **Apprentissage** : L'importance de la standardisation pour la généralisation cross-modalité
+
+**2. Padding Intelligent des Cubes 3D**
+- **Défi** : Les anévrismes aux bords des volumes généraient des cubes incomplets
+- **Solution** : Système de padding centré avec fallback pour garantir toujours la forme (48, 48, 48)
+- **Apprentissage** : La gestion des cas limites est cruciale pour éviter les erreurs silencieuses en production
+
+**3. Scalabilité de l'Architecture**
+- **Défi** : Concevoir un code qui fonctionne sur 20 séries (démo) ET 4000+ (production)
+- **Solution** : Pattern "brick-based" avec filtrage automatique des données disponibles
+- **Apprentissage** : L'abstraction et la modularité permettent une vraie scalabilité
+
+**4. Gestion de Datasets Déséquilibrés**
+- **Défi** : Balance positive variable (34.8% CTA, 3.8% MRI T2, 0% MRI T1post)
+- **Solution** : Extraction configurable de cubes négatifs, stratégie d'augmentation par modalité
+- **Apprentissage** : Le class imbalance doit être géré dès la création du dataset, pas seulement à l'entraînement
+
+### Trade-offs Architecturaux
+
+**Choix 1 : .npz vs HDF5**
+- ✅ Choisi `.npz` pour sa simplicité et compatibilité NumPy native
+- ⚠️ Trade-off : Moins performant que HDF5 pour très gros datasets (> 10GB)
+- 📊 Impact : Acceptable pour démo (6.3MB total), à reconsidérer pour production
+
+**Choix 2 : Cubes fixes 48×48×48 vs tailles variables**
+- ✅ Cubes fixes pour batch processing efficace en PyTorch
+- ⚠️ Trade-off : Perte d'information pour grands anévrismes
+- 📊 Impact : Simplifie l'entraînement, couvre 95%+ des cas cliniques
+
+**Choix 3 : Preprocessing synchrone vs pipeline asynchrone**
+- ✅ Synchrone pour traçabilité et debugging
+- ⚠️ Trade-off : Temps de traitement plus long (20min pour 20 séries)
+- 📊 Impact : Acceptable pour démo, optimisable avec multiprocessing en production
+
+### Compétences Développées
+
+- **Medical Imaging** : Maîtrise du format DICOM, preprocessing 3D (resampling, cropping, windowing)
+- **Software Engineering** : Design patterns (Builder, Preprocessor), architecture modulaire, gestion d'erreurs robuste
+- **Production ML** : Configuration multi-environnement, logging, versioning de datasets
+- **Domain Expertise** : Anatomie cérébrale, positions d'anévrismes, modalités d'imagerie
+
+---
+
 ## 📚 Références
 
 - **Dataset source** : [RSNA Intracranial Hemorrhage Detection](https://www.kaggle.com/competitions/rsna-intracranial-hemorrhage-detection)
 - **Architecture** : Inspired by 3D ResNet for medical imaging
+- **PyDICOM Documentation** : [https://pydicom.github.io/](https://pydicom.github.io/)
+- **Medical Imaging Resources** : [RadioGraphics RSNA](https://pubs.rsna.org/journal/radiographics)
 
 ---
 

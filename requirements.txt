@@ -1,0 +1,22 @@
+# Core scientific computing
+numpy==2.3.0
+pandas==2.3.0
+scipy==1.15.3
+
+# Medical imaging
+pydicom==3.0.1
+
+# Machine Learning
+torch==2.7.1
+scikit-learn==1.7.0
+
+# Visualization
+matplotlib==3.10.3
+Pillow==11.2.1
+
+# Utilities
+tqdm==4.67.1
+
+# Development (optional)
+jupyter>=1.0.0
+notebook>=7.0.0
