@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(mkdir:*)",
-      "Bash(nbstripout --install:*)"
+      "Bash(nbstripout --install:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(ls:*)"
     ]
   }
 }
