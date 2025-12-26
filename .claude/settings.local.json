@@ -9,7 +9,9 @@
       "Bash(git add:*)",
       "Bash(cat:*)",
       "Bash(python:*)",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Bash(git filter-branch -f --msg-filter \"sed ''/🤖 Generated with/d; /Co-Authored-By: Claude/d; /^[[:space:]]*$/d''\" -- --all)",
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --msg-filter \"python -c \"\"\nimport sys\nimport re\nmsg = sys.stdin.read\\(\\)\nmsg = re.sub\\(r''🤖 Generated with \\\\[Claude Code\\\\].*'', '''', msg, flags=re.DOTALL\\)\nmsg = re.sub\\(r''Co-Authored-By: Claude.*'', '''', msg\\)\nmsg = re.sub\\(r''\\\\n\\\\n+'', ''\\\\n\\\\n'', msg\\).strip\\(\\)\nprint\\(msg\\)\n\"\"\" -- --all)"
     ]
   }
 }
