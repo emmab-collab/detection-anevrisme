@@ -5,7 +5,8 @@
       "Bash(nbstripout --install:*)",
       "Bash(git commit:*)",
       "Bash(git push)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(git add:*)"
     ]
   }
 }

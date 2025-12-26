@@ -18,8 +18,10 @@ visualization
     Volume visualization tools
 utils
     General utility functions
-model
-    Deep learning models (to be implemented)
+bricks
+    Pipeline components (Preprocessor, DatasetBuilder, Trainer, etc.)
+models
+    Deep learning model architectures
 """
 
 # Import main configuration
@@ -82,7 +84,20 @@ from .visualization import (
 # Import general utilities
 from .utils import get_pixelspacing
 
-__version__ = "0.1.0"
+# Import bricks (pipeline components)
+from .bricks import (
+    Preprocessor,
+    DatasetBuilder,
+    Augmentor,
+    EDA,
+    Trainer,
+    Predictor
+)
+
+# Import models
+from .models import UNet3DClassifier, ConvBlock3D
+
+__version__ = "0.2.0"
 
 __all__ = [
     # Config
@@ -132,4 +147,16 @@ __all__ = [
 
     # Utils
     'get_pixelspacing',
+
+    # Bricks (Pipeline Components)
+    'Preprocessor',
+    'DatasetBuilder',
+    'Augmentor',
+    'EDA',
+    'Trainer',
+    'Predictor',
+
+    # Models
+    'UNet3DClassifier',
+    'ConvBlock3D',
 ]
