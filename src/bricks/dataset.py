@@ -430,7 +430,7 @@ class DatasetBuilder:
                 + negative_data["patient_ids"],
             }
 
-        print(f"\nDataset created:")
+        print("\nDataset created:")
         print(f"  Total cubes: {len(dataset['cubes'])}")
         print(f"  Positive: {int(dataset['labels'].sum())}")
         print(f"  Negative: {int((1 - dataset['labels']).sum())}")

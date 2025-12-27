@@ -10,8 +10,11 @@ import numpy as np
 from tqdm import tqdm
 
 from ..augmentation import data_augmentation, random_deformation
-from ..config import (DEFAULT_GRID_SIZE, DEFAULT_MAX_DISPLACEMENT,
-                      DEFAULT_N_AUGMENTATIONS)
+from ..config import (
+    DEFAULT_GRID_SIZE,
+    DEFAULT_MAX_DISPLACEMENT,
+    DEFAULT_N_AUGMENTATIONS,
+)
 
 
 class Augmentor:
@@ -98,7 +101,7 @@ class Augmentor:
         augmented_positions = []
         augmented_patient_ids = []
 
-        print(f"Augmenting dataset...")
+        print("Augmenting dataset...")
         print(f"Original size: {len(cubes)} cubes")
 
         for i, (cube, label, position, patient_id) in enumerate(
@@ -133,7 +136,7 @@ class Augmentor:
             "patient_ids": augmented_patient_ids,
         }
 
-        print(f"\nAugmentation complete:")
+        print("\nAugmentation complete:")
         print(f"  Original cubes: {len(cubes)}")
         print(f"  Augmented cubes: {len(augmented_cubes)}")
         print(f"  Augmentation factor: {len(augmented_cubes) / len(cubes):.1f}x")

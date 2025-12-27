@@ -25,31 +25,61 @@ models
 """
 
 # Import augmentation utilities
-from .augmentation import (data_augmentation, dataset_augmented,
-                           random_deformation)
+from .augmentation import data_augmentation, dataset_augmented, random_deformation
+
 # Import bricks (pipeline components)
-from .bricks import (EDA, Augmentor, DatasetBuilder, Predictor, Preprocessor,
-                     Trainer)
+from .bricks import EDA, Augmentor, DatasetBuilder, Predictor, Preprocessor, Trainer
+
 # Import main configuration
-from .config import (ANEURYSM_POSITIONS, CROP_THRESHOLD, DEFAULT_GRID_SIZE,
-                     DEFAULT_MAX_DISPLACEMENT, DEFAULT_N_AUGMENTATIONS,
-                     TARGET_SPACING)
+from .config import (
+    ANEURYSM_POSITIONS,
+    CROP_THRESHOLD,
+    DEFAULT_GRID_SIZE,
+    DEFAULT_MAX_DISPLACEMENT,
+    DEFAULT_N_AUGMENTATIONS,
+    TARGET_SPACING,
+)
+
 # Import data utilities
-from .data import (ajouter_Modality, coordonnee_z, dicom_to_numpy,
-                   get_instance_number, get_patient_ID, get_position)
+from .data import (
+    ajouter_Modality,
+    coordonnee_z,
+    dicom_to_numpy,
+    get_instance_number,
+    get_patient_ID,
+    get_position,
+)
+
 # Import models
 from .models import ConvBlock3D, UNet3DClassifier
+
 # Import paths configuration
-from .paths import (CHECKPOINTS_DIR, IS_KAGGLE, MODELS_DIR, OUTPUT_DIR,
-                    PROCESSED_DIR, SERIES_DIR, TRAIN_CSV, TRAIN_LOCALIZERS_CSV,
-                    print_config)
+from .paths import (
+    CHECKPOINTS_DIR,
+    IS_KAGGLE,
+    MODELS_DIR,
+    OUTPUT_DIR,
+    PROCESSED_DIR,
+    SERIES_DIR,
+    TRAIN_CSV,
+    TRAIN_LOCALIZERS_CSV,
+    print_config,
+)
+
 # Import preprocessing utilities
-from .preprocessing import (crop, get_center, normalization,
-                            preprocessing_volume,
-                            preprocessing_volume_and_coords, resample,
-                            resample_coordonnees)
+from .preprocessing import (
+    crop,
+    get_center,
+    normalization,
+    preprocessing_volume,
+    preprocessing_volume_and_coords,
+    resample,
+    resample_coordonnees,
+)
+
 # Import general utilities
 from .utils import get_pixelspacing
+
 # Import visualization utilities
 from .visualization import show_middle_slices, show_slice_with_point
 

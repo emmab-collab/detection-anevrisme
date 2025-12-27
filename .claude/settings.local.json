@@ -22,7 +22,10 @@
       "Bash(git push:*)",
       "Bash(python -m isort:*)",
       "Bash(pip install:*)",
-      "Bash(isort:*)"
+      "Bash(isort:*)",
+      "Bash(black:*)",
+      "Bash(flake8:*)",
+      "Bash(autoflake:*)"
     ]
   }
 }

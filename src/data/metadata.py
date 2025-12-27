@@ -5,8 +5,6 @@ Patient metadata extraction utilities.
 import ast
 import os
 
-import pandas as pd
-
 from ..config import ANEURYSM_POSITIONS
 
 
@@ -72,7 +70,7 @@ def parse_coordinates(coordinates_str):
         y = coords_dict.get('y', 0.0)
         z = coords_dict.get('z', 0.0)
         return x, y, z
-    except:
+    except Exception:
         return 0.0, 0.0, 0.0
 
 

@@ -215,7 +215,7 @@ class EDA:
                     f for f in os.listdir(patient_path) if f.endswith(".dcm")
                 ]
                 slice_counts.append(len(dicom_files))
-            except:
+            except Exception:
                 continue
 
         if slice_counts:
