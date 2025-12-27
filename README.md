@@ -263,8 +263,8 @@ results/
 
 **Emma B.**
 
-*Étudiante en L3 Mathématiques*
 *Data Scientist autodidacte passionnée par le ML appliqué à la santé*
+*Étudiante en L3 Mathématiques*
 
 ---
 
