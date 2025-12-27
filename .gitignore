@@ -145,6 +145,9 @@ credentials.json
 secrets.yaml
 config_local.py
 
+# Claude Code configuration (local only)
+.claude/
+
 # ============================================================================
 # EXCEPTIONS (files to KEEP in git)
 # ============================================================================
