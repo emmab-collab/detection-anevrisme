@@ -3,14 +3,12 @@ Elastic deformation augmentation for 3D medical volumes.
 """
 
 import numpy as np
-from scipy.ndimage import map_coordinates
 from scipy.interpolate import RegularGridInterpolator
+from scipy.ndimage import map_coordinates
 from tqdm import tqdm
-from ..config import (
-    DEFAULT_GRID_SIZE,
-    DEFAULT_MAX_DISPLACEMENT,
-    DEFAULT_N_AUGMENTATIONS,
-)
+
+from ..config import (DEFAULT_GRID_SIZE, DEFAULT_MAX_DISPLACEMENT,
+                      DEFAULT_N_AUGMENTATIONS)
 
 
 def random_deformation(volume, grid_size=None, max_displacement=None):

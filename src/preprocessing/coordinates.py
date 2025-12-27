@@ -2,10 +2,12 @@
 Coordinate transformation utilities for medical images.
 """
 
-import numpy as np
 import ast
-from ..data.dicom_loader import get_instance_number, coordonnee_z
+
+import numpy as np
+
 from ..config import TARGET_SPACING
+from ..data.dicom_loader import coordonnee_z, get_instance_number
 
 
 def get_center(series_path, patient_path, df_loc):

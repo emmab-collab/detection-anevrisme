@@ -4,10 +4,11 @@ Model Inference
 Classe pour l'inférence sur nouvelles données.
 """
 
+from typing import Dict, Optional, Tuple
+
+import numpy as np
 import torch
 import torch.nn as nn
-import numpy as np
-from typing import Dict, Tuple, Optional
 from tqdm import tqdm
 
 from .preprocessing import Preprocessor

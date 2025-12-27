@@ -2,9 +2,11 @@
 Patient metadata extraction utilities.
 """
 
-import os
-import pandas as pd
 import ast
+import os
+
+import pandas as pd
+
 from ..config import ANEURYSM_POSITIONS
 
 

@@ -19,7 +19,10 @@
       "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch:*)",
       "Bash(git reset:*)",
       "Bash(git rm:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(python -m isort:*)",
+      "Bash(pip install:*)",
+      "Bash(isort:*)"
     ]
   }
 }

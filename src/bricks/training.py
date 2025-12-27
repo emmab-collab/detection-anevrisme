@@ -4,12 +4,13 @@ Model Training
 Classe pour l'entraînement de modèles 3D.
 """
 
+import os
+from typing import Callable, Dict, Optional
+
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
-from typing import Optional, Callable, Dict
 from tqdm import tqdm
-import os
 
 
 class Trainer:

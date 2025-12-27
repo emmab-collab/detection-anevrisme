@@ -4,12 +4,13 @@ Preprocessing Pipeline
 Classe pour le preprocessing des volumes DICOM 3D.
 """
 
+from typing import Optional, Tuple
+
 import numpy as np
 from scipy.ndimage import zoom
-from typing import Tuple, Optional
 
+from ..config import CROP_THRESHOLD, TARGET_SPACING
 from ..data import dicom_to_numpy
-from ..config import TARGET_SPACING, CROP_THRESHOLD
 
 
 class Preprocessor:

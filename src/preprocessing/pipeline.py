@@ -3,10 +3,11 @@ Complete preprocessing pipelines for volume and coordinate processing.
 """
 
 import numpy as np
-from ..data.dicom_loader import dicom_to_numpy
-from .transforms import resample, crop, normalization
-from .coordinates import get_center, resample_coordonnees
+
 from ..config import TARGET_SPACING
+from ..data.dicom_loader import dicom_to_numpy
+from .coordinates import get_center, resample_coordonnees
+from .transforms import crop, normalization, resample
 
 
 def preprocessing_volume_and_coords(

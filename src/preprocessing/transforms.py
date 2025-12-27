@@ -4,7 +4,8 @@ Volume transformation functions for preprocessing.
 
 import numpy as np
 from scipy.ndimage import zoom
-from ..config import TARGET_SPACING, CROP_THRESHOLD
+
+from ..config import CROP_THRESHOLD, TARGET_SPACING
 
 
 def resample(volume, spacing, target_spacing=None):

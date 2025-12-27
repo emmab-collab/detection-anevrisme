@@ -2,8 +2,9 @@
 DICOM file loading and processing utilities.
 """
 
-import numpy as np
 import glob
+
+import numpy as np
 import pydicom
 
 

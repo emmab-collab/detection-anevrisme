@@ -4,13 +4,14 @@ Exploratory Data Analysis
 Classe pour l'analyse exploratoire des données DICOM.
 """
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from typing import List, Dict, Optional
-from tqdm import tqdm
 import os
+from typing import Dict, List, Optional
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import pydicom
+from tqdm import tqdm
 
 from ..data import ajouter_Modality
 from ..visualization import show_middle_slices

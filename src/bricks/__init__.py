@@ -20,12 +20,12 @@ Predictor
     Inférence sur nouvelles données
 """
 
-from .preprocessing import Preprocessor
-from .dataset import DatasetBuilder
 from .augmentation import Augmentor
+from .dataset import DatasetBuilder
 from .eda import EDA
-from .training import Trainer
 from .inference import Predictor
+from .preprocessing import Preprocessor
+from .training import Trainer
 
 __all__ = [
     "Preprocessor",

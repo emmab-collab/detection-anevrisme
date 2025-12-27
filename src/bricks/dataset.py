@@ -4,15 +4,16 @@ Dataset Builder
 Classe pour construire des datasets d'entraînement à partir de volumes DICOM.
 """
 
+import os
+from typing import Dict, List, Optional, Tuple
+
 import numpy as np
 import pandas as pd
-from typing import Tuple, List, Optional, Dict
 from tqdm import tqdm
-import os
 
-from .preprocessing import Preprocessor
-from ..data import get_patient_ID, get_position
 from ..config import ANEURYSM_POSITIONS
+from ..data import get_patient_ID, get_position
+from .preprocessing import Preprocessor
 
 
 class DatasetBuilder:
