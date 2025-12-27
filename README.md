@@ -37,27 +37,65 @@ Le projet suit une **architecture modulaire brick-based** pour une réutilisabil
 
 ```
 src/
-├── bricks/              # Composants réutilisables
-│   ├── preprocessing.py # Pipeline de preprocessing 3D
-│   └── dataset.py       # Construction de datasets
+├── bricks/              # Composants pipeline réutilisables
+│   ├── eda.py          # Analyse exploratoire (EDA)
+│   ├── preprocessing.py # Pipeline de preprocessing 3D (Preprocessor)
+│   ├── dataset.py       # Construction de datasets (DatasetBuilder)
+│   ├── augmentation.py  # Augmentation de données (Augmentor)
+│   ├── training.py      # Entraînement de modèles (Trainer)
+│   └── inference.py     # Inférence (Predictor)
 ├── data/                # Utilitaires de chargement DICOM
-├── preprocessing/       # Transformations (resample, crop, normalize)
+│   ├── dicom_loader.py  # Chargement volumes DICOM
+│   └── metadata.py      # Extraction métadonnées
+├── preprocessing/       # Transformations volumétriques
+│   ├── transforms.py    # Resample, crop, normalize
+│   ├── coordinates.py   # Gestion coordonnées 3D
+│   └── pipeline.py      # Pipeline de preprocessing
+├── augmentation/        # Augmentation de données 3D
+│   └── elastic.py       # Déformations élastiques
+├── models/              # Architectures de modèles
+│   └── unet3d.py        # U-Net 3D pour classification
 ├── visualization/       # Visualisation de volumes 3D
-└── config.py            # Configuration centralisée
+│   └── viewers.py       # Affichage coupes (axiale, coronale, sagittale)
+├── config.py            # Constantes de configuration
+└── paths.py             # Gestion des chemins (Kaggle/Local)
 ```
 
-### Composants Principaux
+### Composants Bricks Principaux
+
+**`EDA`** : Analyse exploratoire des données
+- Distribution des modalités et anévrismes
+- Détection de séries défectueuses
+- Statistiques sur les volumes
+- Visualisation par modalité
 
 **`Preprocessor`** : Pipeline de preprocessing pour volumes DICOM 3D
-- Chargement DICOM
-- Resampling à espacement cible
-- Cropping automatique
-- Normalisation
+- Chargement DICOM avec gestion d'erreurs
+- Resampling à espacement cible (0.4mm isotrope)
+- Cropping automatique du fond
+- Normalisation [0,1]
 
 **`DatasetBuilder`** : Construction de datasets d'entraînement
-- Extraction de cubes 3D (positifs/négatifs)
-- One-hot encoding des positions anatomiques
+- Extraction de cubes 3D (48×48×48) positifs/négatifs
+- Padding intelligent pour cubes incomplets
+- One-hot encoding des 13 positions anatomiques
 - Sauvegarde au format `.npz`
+
+**`Augmentor`** : Augmentation de données 3D
+- Déformations élastiques aléatoires
+- Augmentation configurable par modalité
+- Préservation des labels et positions
+
+**`Trainer`** : Entraînement de modèles
+- Gestion de l'entraînement et validation
+- Calcul de métriques (loss, accuracy, AUC)
+- Sauvegarde de checkpoints
+
+**`Predictor`** : Pipeline d'inférence
+- Détection automatique de modalité
+- Extraction de cubes chevauchants
+- Agrégation de prédictions
+- Génération de vecteur de probabilités (14,)
 
 ---
 
@@ -97,14 +135,25 @@ Chaque modalité génère un fichier `.npz` contenant :
 
 ## Notebooks
 
-| Notebook | Description | Usage |
-|----------|-------------|-------|
-| `01_exploration_donnees.ipynb` | Analyse exploratoire des données DICOM | Comprendre les données |
-| `02_dataset_creation.ipynb` | Création des 4 datasets par modalité | **Exécuter en premier** |
-| `03_entrainement_modele.ipynb` | Entraînement du modèle 3D CNN | Après création datasets |
-| `04_inference.ipynb` | Inférence sur nouveaux patients | Tests & démonstration |
+| Notebook | Description | Composants Utilisés |
+|----------|-------------|---------------------|
+| `01_exploration_donnees.ipynb` | Analyse exploratoire des données DICOM | `EDA`, `Preprocessor` |
+| `02_dataset_creation.ipynb` | Création des 4 datasets par modalité | `DatasetBuilder`, `Preprocessor` |
+| `03_entrainement_modele.ipynb` | Entraînement du modèle U-Net 3D | `Trainer`, `UNet3DClassifier` |
+| `04_inference.ipynb` | Pipeline d'inférence complet | `Predictor`, `UNet3DClassifier` |
+| `05_data_augmentation.ipynb` | Augmentation de données 3D | `Augmentor` |
+| `06_gestion_erreurs.ipynb` | Analyse des erreurs et hard negatives | `Predictor` |
 
-> **Note**: Les notebooks utilisent un échantillon de 20 séries DICOM pour démonstration.
+### Ordre d'Exécution Recommandé
+
+1. **01_exploration_donnees.ipynb** - Comprendre les données (modalités, distributions, visualisations)
+2. **02_dataset_creation.ipynb** - Créer les cubes 3D d'entraînement (à exécuter en premier)
+3. **05_data_augmentation.ipynb** - Augmenter le dataset (optionnel)
+4. **03_entrainement_modele.ipynb** - Entraîner le modèle
+5. **06_gestion_erreurs.ipynb** - Analyser les erreurs (optionnel)
+6. **04_inference.ipynb** - Tester les prédictions
+
+> **Note**: Les notebooks utilisent un échantillon de 20 séries DICOM pour démonstration locale.
 > Le projet original sur Kaggle a traité 4000+ séries avec la même architecture.
 
 ---
@@ -192,15 +241,15 @@ results/
 
 ### Points Forts du Projet
 
-- **Architecture modulaire** : Code réutilisable et maintenable
-- **Multi-modalités** : Support de 4 types d'imagerie médicale
+- **Architecture modulaire** : Code réutilisable avec pattern brick-based
+- **Multi-modalités** : Support de 4 types d'imagerie (CTA, MRA, MRI T2, MRI T1post)
 - **Pipeline complet** : De DICOM brut à modèle entraîné
-- **Gestion d'erreurs** : Robuste aux données manquantes
+- **Gestion d'erreurs** : Robuste aux données manquantes ou corrompues
 - **Documentation** : Code commenté et notebooks explicatifs
 
 ---
 
-## Ce que j'ai appris / What I Learned
+## Ce que j'ai appris 
 
 ### Défis Techniques Rencontrés
 
