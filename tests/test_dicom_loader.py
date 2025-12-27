@@ -3,9 +3,11 @@ Unit tests for DICOM loading utilities.
 """
 
 import unittest
+
 import numpy as np
-from src.data.metadata import parse_coordinates, expand_coordinates
 import pandas as pd
+
+from src.data.metadata import expand_coordinates, parse_coordinates
 
 
 class TestDICOMMetadata(unittest.TestCase):

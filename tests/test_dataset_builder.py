@@ -3,7 +3,9 @@ Unit tests for DatasetBuilder.
 """
 
 import unittest
+
 import numpy as np
+
 from src.bricks.dataset import DatasetBuilder
 from src.bricks.preprocessing import Preprocessor
 

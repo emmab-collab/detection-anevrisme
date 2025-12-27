@@ -3,8 +3,10 @@ Unit tests for preprocessing module.
 """
 
 import unittest
+
 import numpy as np
-from src.preprocessing.transforms import resample, crop, normalization
+
+from src.preprocessing.transforms import crop, normalization, resample
 
 
 class TestPreprocessingTransforms(unittest.TestCase):
