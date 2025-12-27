@@ -239,14 +239,6 @@ results/
 - **Performances** : Résultats non représentatifs (échantillon trop petit)
 - **Usage** : Démonstration de l'architecture uniquement
 
-### Points Forts du Projet
-
-- **Architecture modulaire** : Code réutilisable avec pattern brick-based
-- **Multi-modalités** : Support de 4 types d'imagerie (CTA, MRA, MRI T2, MRI T1post)
-- **Pipeline complet** : De DICOM brut à modèle entraîné
-- **Gestion d'erreurs** : Robuste aux données manquantes ou corrompues
-- **Documentation** : Code commenté et notebooks explicatifs
-
 ---
 
 ## Ce que j'ai appris 
