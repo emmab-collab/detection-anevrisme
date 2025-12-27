@@ -2,7 +2,7 @@
 
 Ce module contient les composants de pipeline réutilisables pour le projet de détection d'anévrismes.
 
-## 📦 Composants Disponibles
+## Composants Disponibles
 
 ### 1. `Preprocessor` - Preprocessing des volumes
 
