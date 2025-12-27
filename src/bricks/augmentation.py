@@ -9,7 +9,11 @@ from typing import Dict, Optional
 from tqdm import tqdm
 
 from ..augmentation import random_deformation, data_augmentation
-from ..config import DEFAULT_N_AUGMENTATIONS, DEFAULT_GRID_SIZE, DEFAULT_MAX_DISPLACEMENT
+from ..config import (
+    DEFAULT_N_AUGMENTATIONS,
+    DEFAULT_GRID_SIZE,
+    DEFAULT_MAX_DISPLACEMENT,
+)
 
 
 class Augmentor:
@@ -39,7 +43,7 @@ class Augmentor:
         self,
         n_augmentations: int = DEFAULT_N_AUGMENTATIONS,
         grid_size: int = DEFAULT_GRID_SIZE,
-        max_displacement: float = DEFAULT_MAX_DISPLACEMENT
+        max_displacement: float = DEFAULT_MAX_DISPLACEMENT,
     ):
         self.n_augmentations = n_augmentations
         self.grid_size = grid_size
@@ -63,15 +67,13 @@ class Augmentor:
             cube,
             grid_size=self.grid_size,
             max_displacement=self.max_displacement,
-            n_augmentations=self.n_augmentations
+            n_augmentations=self.n_augmentations,
         )
 
         return augmented_cubes
 
     def augment_dataset(
-        self,
-        dataset: Dict[str, np.ndarray],
-        augment_negatives: bool = False
+        self, dataset: Dict[str, np.ndarray], augment_negatives: bool = False
     ) -> Dict[str, np.ndarray]:
         """
         Augmente un dataset complet.
@@ -88,10 +90,10 @@ class Augmentor:
         dict
             Dataset augmenté avec les mêmes clés
         """
-        cubes = dataset['cubes']
-        labels = dataset['labels']
-        positions = dataset['positions']
-        patient_ids = dataset['patient_ids']
+        cubes = dataset["cubes"]
+        labels = dataset["labels"]
+        positions = dataset["positions"]
+        patient_ids = dataset["patient_ids"]
 
         augmented_cubes = []
         augmented_labels = []
@@ -102,9 +104,11 @@ class Augmentor:
         print(f"Original size: {len(cubes)} cubes")
 
         for i, (cube, label, position, patient_id) in enumerate(
-            tqdm(zip(cubes, labels, positions, patient_ids),
-                 total=len(cubes),
-                 desc="Augmenting cubes")
+            tqdm(
+                zip(cubes, labels, positions, patient_ids),
+                total=len(cubes),
+                desc="Augmenting cubes",
+            )
         ):
             # Garder l'original
             augmented_cubes.append(cube)
@@ -125,10 +129,10 @@ class Augmentor:
                     augmented_patient_ids.append(f"{patient_id}_aug")
 
         augmented_dataset = {
-            'cubes': np.array(augmented_cubes),
-            'labels': np.array(augmented_labels),
-            'positions': np.array(augmented_positions),
-            'patient_ids': augmented_patient_ids
+            "cubes": np.array(augmented_cubes),
+            "labels": np.array(augmented_labels),
+            "positions": np.array(augmented_positions),
+            "patient_ids": augmented_patient_ids,
         }
 
         print(f"\nAugmentation complete:")
@@ -138,10 +142,7 @@ class Augmentor:
 
         return augmented_dataset
 
-    def augment_positives_only(
-        self,
-        cubes_positive: np.ndarray
-    ) -> np.ndarray:
+    def augment_positives_only(self, cubes_positive: np.ndarray) -> np.ndarray:
         """
         Augmente uniquement les cubes positifs.
 
@@ -179,10 +180,10 @@ class Augmentor:
             Chemin de sortie
         """
         dataset_to_save = {
-            'cubes': dataset['cubes'],
-            'labels': dataset['labels'],
-            'positions': dataset['positions'],
-            'patient_ids': np.array(dataset['patient_ids'], dtype=object)
+            "cubes": dataset["cubes"],
+            "labels": dataset["labels"],
+            "positions": dataset["positions"],
+            "patient_ids": np.array(dataset["patient_ids"], dtype=object),
         }
 
         np.savez_compressed(output_path, **dataset_to_save)
@@ -206,10 +207,10 @@ class Augmentor:
         loaded = np.load(input_path, allow_pickle=True)
 
         dataset = {
-            'cubes': loaded['cubes'],
-            'labels': loaded['labels'],
-            'positions': loaded['positions'],
-            'patient_ids': loaded['patient_ids'].tolist()
+            "cubes": loaded["cubes"],
+            "labels": loaded["labels"],
+            "positions": loaded["positions"],
+            "patient_ids": loaded["patient_ids"].tolist(),
         }
 
         print(f"Augmented dataset loaded from: {input_path}")

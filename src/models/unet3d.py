@@ -29,7 +29,7 @@ class ConvBlock3D(nn.Module):
             nn.ReLU(inplace=True),
             nn.Conv3d(out_ch, out_ch, kernel_size=3, padding=1, bias=False),
             nn.InstanceNorm3d(out_ch),
-            nn.ReLU(inplace=True)
+            nn.ReLU(inplace=True),
         )
 
     def forward(self, x):
@@ -63,24 +63,22 @@ class UNet3DClassifier(nn.Module):
         # Encoder
         self.enc1 = ConvBlock3D(in_ch, base_ch)
         self.pool1 = nn.MaxPool3d(2)
-        self.enc2 = ConvBlock3D(base_ch, base_ch*2)
+        self.enc2 = ConvBlock3D(base_ch, base_ch * 2)
         self.pool2 = nn.MaxPool3d(2)
 
         # Bottleneck
-        self.bottleneck = ConvBlock3D(base_ch*2, base_ch*4)
+        self.bottleneck = ConvBlock3D(base_ch * 2, base_ch * 4)
 
         # Decoder
-        self.up2 = nn.ConvTranspose3d(base_ch*4, base_ch*2, kernel_size=2, stride=2)
-        self.dec2 = ConvBlock3D(base_ch*4, base_ch*2)
+        self.up2 = nn.ConvTranspose3d(base_ch * 4, base_ch * 2, kernel_size=2, stride=2)
+        self.dec2 = ConvBlock3D(base_ch * 4, base_ch * 2)
 
-        self.up1 = nn.ConvTranspose3d(base_ch*2, base_ch, kernel_size=2, stride=2)
-        self.dec1 = ConvBlock3D(base_ch*2, base_ch)
+        self.up1 = nn.ConvTranspose3d(base_ch * 2, base_ch, kernel_size=2, stride=2)
+        self.dec1 = ConvBlock3D(base_ch * 2, base_ch)
 
         # Classifier pour 14 sorties (13 positions + 1 label)
         self.classifier = nn.Sequential(
-            nn.AdaptiveAvgPool3d((1, 1, 1)),
-            nn.Flatten(),
-            nn.Linear(base_ch, 14)
+            nn.AdaptiveAvgPool3d((1, 1, 1)), nn.Flatten(), nn.Linear(base_ch, 14)
         )
 
     def forward(self, x):

@@ -6,7 +6,11 @@ import numpy as np
 from scipy.ndimage import map_coordinates
 from scipy.interpolate import RegularGridInterpolator
 from tqdm import tqdm
-from ..config import DEFAULT_GRID_SIZE, DEFAULT_MAX_DISPLACEMENT, DEFAULT_N_AUGMENTATIONS
+from ..config import (
+    DEFAULT_GRID_SIZE,
+    DEFAULT_MAX_DISPLACEMENT,
+    DEFAULT_N_AUGMENTATIONS,
+)
 
 
 def random_deformation(volume, grid_size=None, max_displacement=None):
@@ -53,26 +57,30 @@ def random_deformation(volume, grid_size=None, max_displacement=None):
     # Original volume coordinates
     dz, dy, dx = shape
     z, y, x = np.meshgrid(
-        np.linspace(0, dz-1, shape[0]),
-        np.linspace(0, dy-1, shape[1]),
-        np.linspace(0, dx-1, shape[2]),
-        indexing="ij"
+        np.linspace(0, dz - 1, shape[0]),
+        np.linspace(0, dy - 1, shape[1]),
+        np.linspace(0, dx - 1, shape[2]),
+        indexing="ij",
     )
 
     # Generate control point grid
-    grid_z = np.linspace(0, dz-1, grid_size)
-    grid_y = np.linspace(0, dy-1, grid_size)
-    grid_x = np.linspace(0, dx-1, grid_size)
+    grid_z = np.linspace(0, dz - 1, grid_size)
+    grid_y = np.linspace(0, dy - 1, grid_size)
+    grid_x = np.linspace(0, dx - 1, grid_size)
 
     # Create random displacement field at control points
     displacement = [
-        np.random.uniform(-max_displacement, max_displacement, size=(grid_size, grid_size, grid_size))
+        np.random.uniform(
+            -max_displacement, max_displacement, size=(grid_size, grid_size, grid_size)
+        )
         for _ in range(3)
     ]
 
     # Interpolate displacement field to full volume using cubic splines
     disp_interp = [
-        RegularGridInterpolator((grid_z, grid_y, grid_x), d, bounds_error=False, fill_value=0)
+        RegularGridInterpolator(
+            (grid_z, grid_y, grid_x), d, bounds_error=False, fill_value=0
+        )
         for d in displacement
     ]
 
@@ -89,7 +97,7 @@ def random_deformation(volume, grid_size=None, max_displacement=None):
     x_new = x + dx_new
 
     # Apply deformation to volume
-    deformed = map_coordinates(volume, [z_new, y_new, x_new], order=3, mode='reflect')
+    deformed = map_coordinates(volume, [z_new, y_new, x_new], order=3, mode="reflect")
 
     return deformed
 

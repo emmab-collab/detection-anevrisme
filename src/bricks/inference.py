@@ -48,9 +48,9 @@ class Predictor:
         self,
         model: nn.Module,
         preprocessor: Preprocessor,
-        device: str = 'cuda',
+        device: str = "cuda",
         cube_size: int = 48,
-        stride: int = 24
+        stride: int = 24,
     ):
         self.model = model.to(device)
         self.preprocessor = preprocessor
@@ -72,18 +72,15 @@ class Predictor:
         state_dict = torch.load(path, map_location=self.device)
 
         # Si c'est un checkpoint complet
-        if isinstance(state_dict, dict) and 'model_state_dict' in state_dict:
-            self.model.load_state_dict(state_dict['model_state_dict'])
+        if isinstance(state_dict, dict) and "model_state_dict" in state_dict:
+            self.model.load_state_dict(state_dict["model_state_dict"])
         else:
             self.model.load_state_dict(state_dict)
 
         self.model.eval()
         print(f"Model loaded from: {path}")
 
-    def extract_sliding_cubes(
-        self,
-        volume: np.ndarray
-    ) -> Tuple[list, list]:
+    def extract_sliding_cubes(self, volume: np.ndarray) -> Tuple[list, list]:
         """
         Extrait des cubes chevauchants d'un volume.
 
@@ -106,9 +103,11 @@ class Predictor:
         for z in range(0, max(D - self.cube_size + 1, 1), self.stride):
             for y in range(0, max(H - self.cube_size + 1, 1), self.stride):
                 for x in range(0, max(W - self.cube_size + 1, 1), self.stride):
-                    cube = volume[z:z+self.cube_size,
-                                 y:y+self.cube_size,
-                                 x:x+self.cube_size]
+                    cube = volume[
+                        z : z + self.cube_size,
+                        y : y + self.cube_size,
+                        x : x + self.cube_size,
+                    ]
 
                     # Pad si nécessaire
                     if cube.shape != (self.cube_size, self.cube_size, self.cube_size):
@@ -128,16 +127,14 @@ class Predictor:
         padded = np.pad(
             cube,
             ((0, pad_z), (0, pad_y), (0, pad_x)),
-            mode='constant',
-            constant_values=0
+            mode="constant",
+            constant_values=0,
         )
 
         return padded
 
     def predict_cube(
-        self,
-        cube: np.ndarray,
-        threshold: float = 0.5
+        self, cube: np.ndarray, threshold: float = 0.5
     ) -> Tuple[float, int]:
         """
         Prédit sur un cube unique.
@@ -178,7 +175,7 @@ class Predictor:
         patient_path: str,
         threshold: float = 0.5,
         top_k: int = 5,
-        aggregation: str = 'mean'
+        aggregation: str = "mean",
     ) -> Dict:
         """
         Prédit sur un volume complet.
@@ -223,9 +220,9 @@ class Predictor:
         top_k_idx = np.argsort(all_probs)[-k:]
         top_k_probs = all_probs[top_k_idx]
 
-        if aggregation == 'max':
+        if aggregation == "max":
             volume_prob = np.max(top_k_probs)
-        elif aggregation == 'percentile':
+        elif aggregation == "percentile":
             volume_prob = np.percentile(top_k_probs, 90)
         else:  # mean
             volume_prob = np.mean(top_k_probs)
@@ -233,17 +230,13 @@ class Predictor:
         volume_label = 1 if volume_prob > threshold else 0
 
         return {
-            'volume_prob': volume_prob,
-            'volume_label': volume_label,
-            'n_cubes': len(cubes),
-            'top_k_probs': top_k_probs.tolist()
+            "volume_prob": volume_prob,
+            "volume_label": volume_label,
+            "n_cubes": len(cubes),
+            "top_k_probs": top_k_probs.tolist(),
         }
 
-    def predict_batch(
-        self,
-        patient_paths: list,
-        threshold: float = 0.5
-    ) -> list:
+    def predict_batch(self, patient_paths: list, threshold: float = 0.5) -> list:
         """
         Prédit sur un batch de volumes.
 

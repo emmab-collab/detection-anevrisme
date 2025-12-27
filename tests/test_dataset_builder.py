@@ -1,6 +1,7 @@
 """
 Unit tests for DatasetBuilder.
 """
+
 import unittest
 import numpy as np
 from src.bricks.dataset import DatasetBuilder
@@ -13,10 +14,7 @@ class TestDatasetBuilder(unittest.TestCase):
     def setUp(self):
         """Initialize test components."""
         self.preprocessor = Preprocessor()
-        self.builder = DatasetBuilder(
-            preprocessor=self.preprocessor,
-            cube_size=48
-        )
+        self.builder = DatasetBuilder(preprocessor=self.preprocessor, cube_size=48)
 
     def test_extract_cube_correct_size(self):
         """Test that extracted cubes have correct size."""
@@ -78,5 +76,5 @@ class TestDatasetBuilder(unittest.TestCase):
         self.assertEqual(len(cubes), expected_count)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

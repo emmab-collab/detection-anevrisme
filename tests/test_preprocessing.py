@@ -1,6 +1,7 @@
 """
 Unit tests for preprocessing module.
 """
+
 import unittest
 import numpy as np
 from src.preprocessing.transforms import resample, crop, normalization
@@ -43,9 +44,7 @@ class TestPreprocessingTransforms(unittest.TestCase):
         target_spacing = (0.5, 0.5, 0.5)  # Higher resolution
 
         resampled = resample(
-            self.test_volume,
-            self.test_spacing,
-            target_spacing=target_spacing
+            self.test_volume, self.test_spacing, target_spacing=target_spacing
         )
 
         # With higher resolution, volume should be larger
@@ -53,5 +52,5 @@ class TestPreprocessingTransforms(unittest.TestCase):
         self.assertGreater(resampled.shape[1], self.test_volume.shape[1])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

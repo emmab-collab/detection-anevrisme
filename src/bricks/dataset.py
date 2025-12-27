@@ -46,7 +46,7 @@ class DatasetBuilder:
         self,
         preprocessor: Preprocessor,
         cube_size: int = 48,
-        series_dir: Optional[str] = None
+        series_dir: Optional[str] = None,
     ):
         self.preprocessor = preprocessor
         self.cube_size = cube_size
@@ -54,10 +54,7 @@ class DatasetBuilder:
         self.position_mapping = {pos: idx for idx, pos in enumerate(ANEURYSM_POSITIONS)}
 
     def extract_cube(
-        self,
-        volume: np.ndarray,
-        center: np.ndarray,
-        size: Optional[int] = None
+        self, volume: np.ndarray, center: np.ndarray, size: Optional[int] = None
     ) -> np.ndarray:
         """
         Extrait un cube centré sur des coordonnées données.
@@ -112,15 +109,21 @@ class DatasetBuilder:
 
         padded = np.pad(
             cube,
-            ((pad_x_before, pad_x_after), (pad_y_before, pad_y_after), (pad_z_before, pad_z_after)),
-            mode='constant',
-            constant_values=0
+            (
+                (pad_x_before, pad_x_after),
+                (pad_y_before, pad_y_after),
+                (pad_z_before, pad_z_after),
+            ),
+            mode="constant",
+            constant_values=0,
         )
 
         # Vérifier la taille finale
         if padded.shape != (target_size, target_size, target_size):
             # Fallback: crop ou pad pour atteindre exactement la taille cible
-            result = np.zeros((target_size, target_size, target_size), dtype=padded.dtype)
+            result = np.zeros(
+                (target_size, target_size, target_size), dtype=padded.dtype
+            )
             min_x = min(padded.shape[0], target_size)
             min_y = min(padded.shape[1], target_size)
             min_z = min(padded.shape[2], target_size)
@@ -130,9 +133,7 @@ class DatasetBuilder:
         return padded
 
     def extract_non_overlapping_cubes(
-        self,
-        volume: np.ndarray,
-        stride: Optional[int] = None
+        self, volume: np.ndarray, stride: Optional[int] = None
     ) -> List[np.ndarray]:
         """
         Extrait des cubes non chevauchants d'un volume.
@@ -158,19 +159,18 @@ class DatasetBuilder:
         for z in range(0, D - self.cube_size + 1, stride):
             for y in range(0, H - self.cube_size + 1, stride):
                 for x in range(0, W - self.cube_size + 1, stride):
-                    cube = volume[z:z+self.cube_size,
-                                 y:y+self.cube_size,
-                                 x:x+self.cube_size]
+                    cube = volume[
+                        z : z + self.cube_size,
+                        y : y + self.cube_size,
+                        x : x + self.cube_size,
+                    ]
 
                     if cube.shape == (self.cube_size, self.cube_size, self.cube_size):
                         cubes.append(cube)
 
         return cubes
 
-    def create_position_vector(
-        self,
-        position_name: str
-    ) -> np.ndarray:
+    def create_position_vector(self, position_name: str) -> np.ndarray:
         """
         Crée un vecteur one-hot pour la position de l'anévrisme.
 
@@ -193,9 +193,7 @@ class DatasetBuilder:
         return vector
 
     def extract_positive_cubes(
-        self,
-        df_localizers: pd.DataFrame,
-        n_cubes_per_patient: int = 1
+        self, df_localizers: pd.DataFrame, n_cubes_per_patient: int = 1
     ) -> Dict[str, np.ndarray]:
         """
         Extrait les cubes positifs (contenant des anévrismes).
@@ -220,21 +218,23 @@ class DatasetBuilder:
         positions_list = []
         patient_ids = []
 
-        for idx, row in tqdm(df_localizers.iterrows(),
-                            total=len(df_localizers),
-                            desc="Extracting positive cubes"):
+        for idx, row in tqdm(
+            df_localizers.iterrows(),
+            total=len(df_localizers),
+            desc="Extracting positive cubes",
+        ):
 
             try:
-                series_uid = row['SeriesInstanceUID']
+                series_uid = row["SeriesInstanceUID"]
                 patient_path = os.path.join(self.series_dir, series_uid)
 
                 # Get coordinates et position
-                coords = np.array([row['x'], row['y'], row['z']])
-                position_name = row.get('location', 'Unknown')
+                coords = np.array([row["x"], row["y"], row["z"]])
+                position_name = row.get("location", "Unknown")
 
                 # Preprocessing
-                volume, transformed_coords = self.preprocessor.process_volume_with_coords(
-                    patient_path, coords
+                volume, transformed_coords = (
+                    self.preprocessor.process_volume_with_coords(patient_path, coords)
                 )
 
                 # Extract cube
@@ -252,16 +252,14 @@ class DatasetBuilder:
                 continue
 
         return {
-            'cubes': np.array(cubes_list),
-            'labels': np.ones(len(cubes_list), dtype=float),
-            'positions': np.array(positions_list),
-            'patient_ids': patient_ids
+            "cubes": np.array(cubes_list),
+            "labels": np.ones(len(cubes_list), dtype=float),
+            "positions": np.array(positions_list),
+            "patient_ids": patient_ids,
         }
 
     def extract_negative_cubes(
-        self,
-        df_negatives: pd.DataFrame,
-        n_cubes_per_volume: int = 5
+        self, df_negatives: pd.DataFrame, n_cubes_per_volume: int = 5
     ) -> Dict[str, np.ndarray]:
         """
         Extrait les cubes négatifs (sans anévrisme).
@@ -281,12 +279,14 @@ class DatasetBuilder:
         cubes_list = []
         patient_ids = []
 
-        for idx, row in tqdm(df_negatives.iterrows(),
-                            total=len(df_negatives),
-                            desc="Extracting negative cubes"):
+        for idx, row in tqdm(
+            df_negatives.iterrows(),
+            total=len(df_negatives),
+            desc="Extracting negative cubes",
+        ):
 
             try:
-                series_uid = row['SeriesInstanceUID']
+                series_uid = row["SeriesInstanceUID"]
                 patient_path = os.path.join(self.series_dir, series_uid)
 
                 # Preprocessing
@@ -312,10 +312,10 @@ class DatasetBuilder:
         n_cubes = len(cubes_list)
 
         return {
-            'cubes': np.array(cubes_list),
-            'labels': np.zeros(n_cubes, dtype=float),
-            'positions': np.zeros((n_cubes, 13), dtype=float),
-            'patient_ids': patient_ids
+            "cubes": np.array(cubes_list),
+            "labels": np.zeros(n_cubes, dtype=float),
+            "positions": np.zeros((n_cubes, 13), dtype=float),
+            "patient_ids": patient_ids,
         }
 
     def _filter_available_series(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -336,18 +336,15 @@ class DatasetBuilder:
             return df
 
         available_series = []
-        for series_uid in df['SeriesInstanceUID'].unique():
+        for series_uid in df["SeriesInstanceUID"].unique():
             patient_path = os.path.join(self.series_dir, series_uid)
             if os.path.exists(patient_path):
                 available_series.append(series_uid)
 
-        return df[df['SeriesInstanceUID'].isin(available_series)].reset_index(drop=True)
+        return df[df["SeriesInstanceUID"].isin(available_series)].reset_index(drop=True)
 
     def build_dataset(
-        self,
-        df_train: pd.DataFrame,
-        df_localizers: pd.DataFrame,
-        modality: str = 'CTA'
+        self, df_train: pd.DataFrame, df_localizers: pd.DataFrame, modality: str = "CTA"
     ) -> Dict[str, np.ndarray]:
         """
         Construit un dataset complet pour une modalité.
@@ -371,7 +368,7 @@ class DatasetBuilder:
         print(f"{'='*60}\n")
 
         # Filter by modality
-        df_modality = df_train[df_train['Modality'] == modality].reset_index(drop=True)
+        df_modality = df_train[df_train["Modality"] == modality].reset_index(drop=True)
         print(f"Total {modality} series in CSV: {len(df_modality)}")
 
         # Filter only locally available series
@@ -379,12 +376,12 @@ class DatasetBuilder:
         print(f"Available {modality} series locally: {len(df_modality)}")
 
         # Split positives and negatives
-        df_positives = df_modality[df_modality['Aneurysm Present'] == 1]
-        df_negatives = df_modality[df_modality['Aneurysm Present'] == 0]
+        df_positives = df_modality[df_modality["Aneurysm Present"] == 1]
+        df_negatives = df_modality[df_modality["Aneurysm Present"] == 0]
 
         # Join localizers for positives
         df_pos_loc = df_localizers[
-            df_localizers['SeriesInstanceUID'].isin(df_positives['SeriesInstanceUID'])
+            df_localizers["SeriesInstanceUID"].isin(df_positives["SeriesInstanceUID"])
         ]
 
         print(f"Positive series: {len(df_positives)}")
@@ -395,34 +392,41 @@ class DatasetBuilder:
         negative_data = self.extract_negative_cubes(df_negatives)
 
         # Combine - handle empty cases
-        if len(positive_data['cubes']) == 0 and len(negative_data['cubes']) == 0:
+        if len(positive_data["cubes"]) == 0 and len(negative_data["cubes"]) == 0:
             print("\n⚠️ No cubes extracted for this modality")
             return {
-                'cubes': np.array([]),
-                'labels': np.array([]),
-                'positions': np.array([]).reshape(0, 13),
-                'patient_ids': []
+                "cubes": np.array([]),
+                "labels": np.array([]),
+                "positions": np.array([]).reshape(0, 13),
+                "patient_ids": [],
             }
-        elif len(positive_data['cubes']) == 0:
+        elif len(positive_data["cubes"]) == 0:
             dataset = {
-                'cubes': negative_data['cubes'],
-                'labels': negative_data['labels'],
-                'positions': negative_data['positions'],
-                'patient_ids': negative_data['patient_ids']
+                "cubes": negative_data["cubes"],
+                "labels": negative_data["labels"],
+                "positions": negative_data["positions"],
+                "patient_ids": negative_data["patient_ids"],
             }
-        elif len(negative_data['cubes']) == 0:
+        elif len(negative_data["cubes"]) == 0:
             dataset = {
-                'cubes': positive_data['cubes'],
-                'labels': positive_data['labels'],
-                'positions': positive_data['positions'],
-                'patient_ids': positive_data['patient_ids']
+                "cubes": positive_data["cubes"],
+                "labels": positive_data["labels"],
+                "positions": positive_data["positions"],
+                "patient_ids": positive_data["patient_ids"],
             }
         else:
             dataset = {
-                'cubes': np.concatenate([positive_data['cubes'], negative_data['cubes']]),
-                'labels': np.concatenate([positive_data['labels'], negative_data['labels']]),
-                'positions': np.concatenate([positive_data['positions'], negative_data['positions']]),
-                'patient_ids': positive_data['patient_ids'] + negative_data['patient_ids']
+                "cubes": np.concatenate(
+                    [positive_data["cubes"], negative_data["cubes"]]
+                ),
+                "labels": np.concatenate(
+                    [positive_data["labels"], negative_data["labels"]]
+                ),
+                "positions": np.concatenate(
+                    [positive_data["positions"], negative_data["positions"]]
+                ),
+                "patient_ids": positive_data["patient_ids"]
+                + negative_data["patient_ids"],
             }
 
         print(f"\nDataset created:")
@@ -445,10 +449,10 @@ class DatasetBuilder:
         """
         # Convert patient_ids to array for npz
         dataset_to_save = {
-            'cubes': dataset['cubes'],
-            'labels': dataset['labels'],
-            'positions': dataset['positions'],
-            'patient_ids': np.array(dataset['patient_ids'], dtype=object)
+            "cubes": dataset["cubes"],
+            "labels": dataset["labels"],
+            "positions": dataset["positions"],
+            "patient_ids": np.array(dataset["patient_ids"], dtype=object),
         }
 
         np.savez_compressed(output_path, **dataset_to_save)
@@ -472,10 +476,10 @@ class DatasetBuilder:
         loaded = np.load(input_path, allow_pickle=True)
 
         dataset = {
-            'cubes': loaded['cubes'],
-            'labels': loaded['labels'],
-            'positions': loaded['positions'],
-            'patient_ids': loaded['patient_ids'].tolist()
+            "cubes": loaded["cubes"],
+            "labels": loaded["labels"],
+            "positions": loaded["positions"],
+            "patient_ids": loaded["patient_ids"].tolist(),
         }
 
         print(f"Dataset loaded from: {input_path}")

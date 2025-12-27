@@ -13,7 +13,13 @@
       "Bash(git filter-branch -f --msg-filter \"sed ''/🤖 Generated with/d; /Co-Authored-By: Claude/d; /^[[:space:]]*$/d''\" -- --all)",
       "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --msg-filter \"python -c \"\"\nimport sys\nimport re\nmsg = sys.stdin.read\\(\\)\nmsg = re.sub\\(r''🤖 Generated with \\\\[Claude Code\\\\].*'', '''', msg, flags=re.DOTALL\\)\nmsg = re.sub\\(r''Co-Authored-By: Claude.*'', '''', msg\\)\nmsg = re.sub\\(r''\\\\n\\\\n+'', ''\\\\n\\\\n'', msg\\).strip\\(\\)\nprint\\(msg\\)\n\"\"\" -- --all)",
       "Bash(tree:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(git rebase:*)",
+      "Bash(git filter-branch -f --msg-filter '\nsed -e \"\"/🤖 Generated with \\\\[Claude Code\\\\]/d\"\" \\\\\n    -e \"\"/Co-Authored-By: Claude Sonnet 4.5/d\"\" \\\\\n    -e \"\"/^$/N;/^\\\\n$/D\"\"\n' HEAD~2..HEAD)",
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch:*)",
+      "Bash(git reset:*)",
+      "Bash(git rm:*)",
+      "Bash(git push:*)"
     ]
   }
 }

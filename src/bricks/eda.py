@@ -44,19 +44,14 @@ class EDA:
     """
 
     def __init__(
-        self,
-        df_train: pd.DataFrame,
-        df_localizers: pd.DataFrame,
-        series_dir: str
+        self, df_train: pd.DataFrame, df_localizers: pd.DataFrame, series_dir: str
     ):
         self.df_train = df_train
         self.df_localizers = df_localizers
         self.series_dir = series_dir
 
         # Ajouter modalité aux localizers
-        self.df_loc_with_modality = ajouter_Modality(
-            self.df_localizers, self.df_train
-        )
+        self.df_loc_with_modality = ajouter_Modality(self.df_localizers, self.df_train)
 
     def analyze_modalities(self) -> pd.Series:
         """
@@ -67,11 +62,11 @@ class EDA:
         pd.Series
             Comptage par modalité
         """
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("MODALITY DISTRIBUTION")
-        print("="*60)
+        print("=" * 60)
 
-        modality_counts = self.df_train['Modality'].value_counts()
+        modality_counts = self.df_train["Modality"].value_counts()
         print(modality_counts)
 
         return modality_counts
@@ -85,11 +80,11 @@ class EDA:
         pd.Series
             Comptage présence/absence
         """
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("ANEURYSM DISTRIBUTION")
-        print("="*60)
+        print("=" * 60)
 
-        aneurysm_counts = self.df_train['Aneurysm Present'].value_counts()
+        aneurysm_counts = self.df_train["Aneurysm Present"].value_counts()
         print(f"Without aneurysm: {aneurysm_counts.get(0, 0)}")
         print(f"With aneurysm: {aneurysm_counts.get(1, 0)}")
         print(f"Total: {len(self.df_train)}")
@@ -105,25 +100,33 @@ class EDA:
         pd.DataFrame
             Statistiques par position
         """
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("ANEURYSM POSITIONS")
-        print("="*60)
+        print("=" * 60)
 
         # Colonnes de positions
-        position_cols = [col for col in self.df_train.columns
-                        if col not in ['SeriesInstanceUID', 'PatientAge',
-                                      'PatientSex', 'Modality', 'Aneurysm Present']]
+        position_cols = [
+            col
+            for col in self.df_train.columns
+            if col
+            not in [
+                "SeriesInstanceUID",
+                "PatientAge",
+                "PatientSex",
+                "Modality",
+                "Aneurysm Present",
+            ]
+        ]
 
-        position_counts = self.df_train[position_cols].sum().sort_values(ascending=False)
+        position_counts = (
+            self.df_train[position_cols].sum().sort_values(ascending=False)
+        )
 
         print(position_counts)
 
         return position_counts
 
-    def detect_defective_series(
-        self,
-        df: Optional[pd.DataFrame] = None
-    ) -> List[str]:
+    def detect_defective_series(self, df: Optional[pd.DataFrame] = None) -> List[str]:
         """
         Détecte les séries avec des tailles d'images incohérentes.
 
@@ -140,21 +143,23 @@ class EDA:
         if df is None:
             df = self.df_loc_with_modality
 
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("DETECTING DEFECTIVE SERIES")
-        print("="*60)
+        print("=" * 60)
 
         defective_series = []
 
         for _, row in tqdm(df.iterrows(), total=len(df), desc="Checking series"):
-            series_uid = row['SeriesInstanceUID']
+            series_uid = row["SeriesInstanceUID"]
             patient_path = os.path.join(self.series_dir, series_uid)
 
             if not os.path.exists(patient_path):
                 continue
 
             try:
-                dicom_files = [f for f in os.listdir(patient_path) if f.endswith('.dcm')]
+                dicom_files = [
+                    f for f in os.listdir(patient_path) if f.endswith(".dcm")
+                ]
 
                 if not dicom_files:
                     continue
@@ -186,35 +191,39 @@ class EDA:
         dict
             Statistiques sur le nombre de slices
         """
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("SLICE COUNT STATISTICS")
-        print("="*60)
+        print("=" * 60)
 
         slice_counts = []
 
-        for _, row in tqdm(self.df_train.iterrows(),
-                          total=min(100, len(self.df_train)),
-                          desc="Counting slices"):
+        for _, row in tqdm(
+            self.df_train.iterrows(),
+            total=min(100, len(self.df_train)),
+            desc="Counting slices",
+        ):
 
-            series_uid = row['SeriesInstanceUID']
+            series_uid = row["SeriesInstanceUID"]
             patient_path = os.path.join(self.series_dir, series_uid)
 
             if not os.path.exists(patient_path):
                 continue
 
             try:
-                dicom_files = [f for f in os.listdir(patient_path) if f.endswith('.dcm')]
+                dicom_files = [
+                    f for f in os.listdir(patient_path) if f.endswith(".dcm")
+                ]
                 slice_counts.append(len(dicom_files))
             except:
                 continue
 
         if slice_counts:
             stats = {
-                'mean': np.mean(slice_counts),
-                'median': np.median(slice_counts),
-                'min': np.min(slice_counts),
-                'max': np.max(slice_counts),
-                'std': np.std(slice_counts)
+                "mean": np.mean(slice_counts),
+                "median": np.median(slice_counts),
+                "min": np.min(slice_counts),
+                "max": np.max(slice_counts),
+                "std": np.std(slice_counts),
             }
 
             print(f"Mean: {stats['mean']:.1f}")
@@ -232,17 +241,17 @@ class EDA:
         fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
         # Plot 1: Présence/Absence
-        aneurysm_counts = self.df_train['Aneurysm Present'].value_counts()
-        axes[0].bar(['Absent', 'Present'], aneurysm_counts.values)
-        axes[0].set_title('Aneurysm Presence Distribution')
-        axes[0].set_ylabel('Count')
+        aneurysm_counts = self.df_train["Aneurysm Present"].value_counts()
+        axes[0].bar(["Absent", "Present"], aneurysm_counts.values)
+        axes[0].set_title("Aneurysm Presence Distribution")
+        axes[0].set_ylabel("Count")
 
         # Plot 2: Distribution par modalité
-        modality_counts = self.df_train['Modality'].value_counts()
+        modality_counts = self.df_train["Modality"].value_counts()
         axes[1].bar(modality_counts.index, modality_counts.values)
-        axes[1].set_title('Modality Distribution')
-        axes[1].set_ylabel('Count')
-        axes[1].tick_params(axis='x', rotation=45)
+        axes[1].set_title("Modality Distribution")
+        axes[1].set_ylabel("Count")
+        axes[1].tick_params(axis="x", rotation=45)
 
         plt.tight_layout()
         plt.show()
@@ -256,9 +265,9 @@ class EDA:
         output_path : str, optional
             Chemin pour sauvegarder le rapport HTML
         """
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("EDA REPORT")
-        print("="*60)
+        print("=" * 60)
 
         self.analyze_modalities()
         self.analyze_aneurysm_distribution()
@@ -267,7 +276,7 @@ class EDA:
 
         # TODO: Générer rapport HTML si output_path fourni
 
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
 
     def visualize_modalities(self, preprocessor=None, max_per_modality: int = 1):
         """
@@ -290,23 +299,31 @@ class EDA:
         # Importer Preprocessor seulement si nécessaire
         if preprocessor is None:
             from .preprocessing import Preprocessor
+
             preprocessor = Preprocessor(target_spacing=(0.4, 0.4, 0.4))
 
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("VISUALIZATION OF MODALITIES")
-        print("="*60)
+        print("=" * 60)
 
         # Obtenir les séries disponibles localement
-        available_series = [d for d in os.listdir(self.series_dir)
-                           if os.path.isdir(os.path.join(self.series_dir, d))]
+        available_series = [
+            d
+            for d in os.listdir(self.series_dir)
+            if os.path.isdir(os.path.join(self.series_dir, d))
+        ]
 
         # Filtrer le dataframe pour ne garder que les séries disponibles localement
-        df_local = self.df_train[self.df_train['SeriesInstanceUID'].isin(available_series)]
+        df_local = self.df_train[
+            self.df_train["SeriesInstanceUID"].isin(available_series)
+        ]
 
-        print(f"\nLocal series found: {len(df_local)} out of {len(self.df_train)} total")
+        print(
+            f"\nLocal series found: {len(df_local)} out of {len(self.df_train)} total"
+        )
 
         # Obtenir les modalités disponibles localement
-        modalities = df_local['Modality'].unique()
+        modalities = df_local["Modality"].unique()
 
         for modality in modalities:
             print(f"\n{'='*60}")
@@ -314,9 +331,9 @@ class EDA:
             print(f"{'='*60}")
 
             # Trouver des séries locales de cette modalité
-            series_with_modality = df_local[
-                df_local['Modality'] == modality
-            ]['SeriesInstanceUID'].head(max_per_modality)
+            series_with_modality = df_local[df_local["Modality"] == modality][
+                "SeriesInstanceUID"
+            ].head(max_per_modality)
 
             count = 0
             for series_uid in series_with_modality:

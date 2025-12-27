@@ -39,15 +39,13 @@ class Preprocessor:
     def __init__(
         self,
         target_spacing: Tuple[float, float, float] = TARGET_SPACING,
-        crop_threshold: float = CROP_THRESHOLD
+        crop_threshold: float = CROP_THRESHOLD,
     ):
         self.target_spacing = target_spacing
         self.crop_threshold = crop_threshold
 
     def resample(
-        self,
-        volume: np.ndarray,
-        spacing: Tuple[float, float, float]
+        self, volume: np.ndarray, spacing: Tuple[float, float, float]
     ) -> np.ndarray:
         """
         Resample le volume à l'espacement cible.
@@ -68,10 +66,7 @@ class Preprocessor:
         resampled = zoom(volume, zoom_factors, order=1)
         return resampled
 
-    def crop(
-        self,
-        volume: np.ndarray
-    ) -> Tuple[np.ndarray, Tuple[int, int, int]]:
+    def crop(self, volume: np.ndarray) -> Tuple[np.ndarray, Tuple[int, int, int]]:
         """
         Coupe le volume pour retirer le fond noir.
 
@@ -99,7 +94,7 @@ class Preprocessor:
         z_min, z_max = mask.any(axis=(0, 1)).nonzero()[0][[0, -1]]
 
         # Crop
-        cropped = volume[x_min:x_max+1, y_min:y_max+1, z_min:z_max+1]
+        cropped = volume[x_min : x_max + 1, y_min : y_max + 1, z_min : z_max + 1]
         crop_indices = (x_min, y_min, z_min)
 
         return cropped, crop_indices
@@ -128,9 +123,7 @@ class Preprocessor:
         return normalized
 
     def resample_coordinates(
-        self,
-        coords: np.ndarray,
-        spacing: Tuple[float, float, float]
+        self, coords: np.ndarray, spacing: Tuple[float, float, float]
     ) -> np.ndarray:
         """
         Resample les coordonnées à l'espacement cible.
@@ -150,11 +143,7 @@ class Preprocessor:
         x, y, z = coords
 
         # Coordonnées physiques en mm
-        coords_mm = np.array([
-            x * spacing[0],
-            y * spacing[1],
-            z * spacing[2]
-        ])
+        coords_mm = np.array([x * spacing[0], y * spacing[1], z * spacing[2]])
 
         # Nouveaux indices
         new_coords = coords_mm / np.array(self.target_spacing)
@@ -190,9 +179,7 @@ class Preprocessor:
         return volume
 
     def process_volume_with_coords(
-        self,
-        patient_path: str,
-        coords: np.ndarray
+        self, patient_path: str, coords: np.ndarray
     ) -> Tuple[np.ndarray, np.ndarray]:
         """
         Pipeline complet avec transformation des coordonnées.

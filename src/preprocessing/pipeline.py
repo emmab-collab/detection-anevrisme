@@ -9,7 +9,9 @@ from .coordinates import get_center, resample_coordonnees
 from ..config import TARGET_SPACING
 
 
-def preprocessing_volume_and_coords(series_path, patient_path, df_loc, target_spacing=None):
+def preprocessing_volume_and_coords(
+    series_path, patient_path, df_loc, target_spacing=None
+):
     """
     Complete preprocessing pipeline for volume and aneurysm coordinates.
 
@@ -53,7 +55,9 @@ def preprocessing_volume_and_coords(series_path, patient_path, df_loc, target_sp
 
     # Resample volume and coordinates
     resample_volume = resample(volume, spacing, target_spacing=target_spacing)
-    resample_coords = resample_coordonnees(spacing, coords, target_spacing=target_spacing)
+    resample_coords = resample_coordonnees(
+        spacing, coords, target_spacing=target_spacing
+    )
 
     # Crop and adjust coordinates
     crop_volume, crop_indices = crop(resample_volume)

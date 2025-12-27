@@ -28,10 +28,10 @@ from .training import Trainer
 from .inference import Predictor
 
 __all__ = [
-    'Preprocessor',
-    'DatasetBuilder',
-    'Augmentor',
-    'EDA',
-    'Trainer',
-    'Predictor',
+    "Preprocessor",
+    "DatasetBuilder",
+    "Augmentor",
+    "EDA",
+    "Trainer",
+    "Predictor",
 ]

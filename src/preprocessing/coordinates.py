@@ -36,17 +36,19 @@ def get_center(series_path, patient_path, df_loc):
     import os
 
     numero_patient = os.path.basename(patient_path)
-    numero_coupe = df_loc[df_loc['SeriesInstanceUID'] == numero_patient]['SOPInstanceUID'].iloc[0]
+    numero_coupe = df_loc[df_loc["SeriesInstanceUID"] == numero_patient][
+        "SOPInstanceUID"
+    ].iloc[0]
 
     instance_number = get_instance_number(patient_path, df_loc, series_path)
     z = coordonnee_z(patient_path, instance_number)
 
-    coord_str = df_loc[df_loc['SOPInstanceUID'] == numero_coupe]['coordinates'].iloc[0]
+    coord_str = df_loc[df_loc["SOPInstanceUID"] == numero_coupe]["coordinates"].iloc[0]
     coord_dict = ast.literal_eval(coord_str)
 
     # Note: x and y are swapped intentionally
-    x = coord_dict['y']
-    y = coord_dict['x']
+    x = coord_dict["y"]
+    y = coord_dict["x"]
 
     center = np.array([x, y, z])
     return center
@@ -80,7 +82,9 @@ def resample_coordonnees(spacing, coords, target_spacing=None):
     >>> new_coords = resample_coordonnees(original_spacing, original_coords, 0.4)
     """
     if target_spacing is None:
-        target_spacing = TARGET_SPACING[0] if isinstance(TARGET_SPACING, tuple) else TARGET_SPACING
+        target_spacing = (
+            TARGET_SPACING[0] if isinstance(TARGET_SPACING, tuple) else TARGET_SPACING
+        )
 
     x, y, z = coords
 

@@ -78,7 +78,7 @@ def crop(volume, threshold=None):
     z_min, z_max = mask.any(axis=(0, 1)).nonzero()[0][[0, -1]]
 
     # Crop
-    cropped = volume[x_min:x_max+1, y_min:y_max+1, z_min:z_max+1]
+    cropped = volume[x_min : x_max + 1, y_min : y_max + 1, z_min : z_max + 1]
 
     return cropped, (x_min, y_min, z_min)
 
