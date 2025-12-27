@@ -4,12 +4,12 @@ Data Augmentation
 Classe pour l'augmentation de données sur les cubes 3D.
 """
 
-from typing import Dict, Optional
+from typing import Dict
 
 import numpy as np
 from tqdm import tqdm
 
-from ..augmentation import data_augmentation, random_deformation
+from ..augmentation import data_augmentation
 from ..config import (
     DEFAULT_GRID_SIZE,
     DEFAULT_MAX_DISPLACEMENT,

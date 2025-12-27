@@ -6,7 +6,6 @@ Implémentation d'un UNet 3D pour la classification de cubes médicaux.
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 
 class ConvBlock3D(nn.Module):

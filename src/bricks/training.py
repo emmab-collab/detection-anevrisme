@@ -5,7 +5,7 @@ Classe pour l'entraînement de modèles 3D.
 """
 
 import os
-from typing import Callable, Dict, Optional
+from typing import Callable, Optional
 
 import torch
 import torch.nn as nn

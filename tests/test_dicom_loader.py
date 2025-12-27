@@ -4,7 +4,6 @@ Unit tests for DICOM loading utilities.
 
 import unittest
 
-import numpy as np
 import pandas as pd
 
 from src.data.metadata import expand_coordinates, parse_coordinates

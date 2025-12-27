@@ -86,7 +86,7 @@ def random_deformation(volume, grid_size=None, max_displacement=None):
     ]
 
     # Compute deformed coordinates
-    coords = np.array([z, y, x])
+    np.array([z, y, x])
     points = np.array([z.flatten(), y.flatten(), x.flatten()]).T
 
     dz_new = disp_interp[0](points).reshape(shape)

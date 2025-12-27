@@ -5,14 +5,13 @@ Classe pour construire des datasets d'entraînement à partir de volumes DICOM.
 """
 
 import os
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
 from ..config import ANEURYSM_POSITIONS
-from ..data import get_patient_ID, get_position
 from .preprocessing import Preprocessor
 
 
