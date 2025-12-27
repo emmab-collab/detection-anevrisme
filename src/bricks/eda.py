@@ -13,6 +13,7 @@ import os
 import pydicom
 
 from ..data import ajouter_Modality
+from ..visualization import show_middle_slices
 
 
 class EDA:
@@ -267,6 +268,78 @@ class EDA:
         # TODO: Générer rapport HTML si output_path fourni
 
         print("\n" + "="*60)
+
+    def visualize_modalities(self, preprocessor=None, max_per_modality: int = 1):
+        """
+        Visualise des exemples d'images pour chaque modalité disponible.
+
+        Parameters
+        ----------
+        preprocessor : Preprocessor, optional
+            Instance de Preprocessor pour charger les volumes.
+            Si None, créé automatiquement.
+        max_per_modality : int, default=1
+            Nombre maximum d'exemples à afficher par modalité
+
+        Examples
+        --------
+        >>> from src.bricks import Preprocessor
+        >>> preprocessor = Preprocessor()
+        >>> eda.visualize_modalities(preprocessor, max_per_modality=2)
+        """
+        # Importer Preprocessor seulement si nécessaire
+        if preprocessor is None:
+            from .preprocessing import Preprocessor
+            preprocessor = Preprocessor(target_spacing=(0.4, 0.4, 0.4))
+
+        print("\n" + "="*60)
+        print("VISUALIZATION OF MODALITIES")
+        print("="*60)
+
+        # Obtenir les séries disponibles localement
+        available_series = [d for d in os.listdir(self.series_dir)
+                           if os.path.isdir(os.path.join(self.series_dir, d))]
+
+        # Filtrer le dataframe pour ne garder que les séries disponibles localement
+        df_local = self.df_train[self.df_train['SeriesInstanceUID'].isin(available_series)]
+
+        print(f"\nLocal series found: {len(df_local)} out of {len(self.df_train)} total")
+
+        # Obtenir les modalités disponibles localement
+        modalities = df_local['Modality'].unique()
+
+        for modality in modalities:
+            print(f"\n{'='*60}")
+            print(f"Modality: {modality}")
+            print(f"{'='*60}")
+
+            # Trouver des séries locales de cette modalité
+            series_with_modality = df_local[
+                df_local['Modality'] == modality
+            ]['SeriesInstanceUID'].head(max_per_modality)
+
+            count = 0
+            for series_uid in series_with_modality:
+                series_path = os.path.join(self.series_dir, series_uid)
+
+                try:
+                    print(f"\nSeries: {series_uid}")
+
+                    # Charger et préprocesser le volume
+                    volume = preprocessor.process_volume(series_path)
+                    print(f"Volume shape: {volume.shape}")
+
+                    # Visualiser les coupes centrales
+                    show_middle_slices(volume)
+
+                    count += 1
+
+                except Exception as e:
+                    print(f"Error loading {series_uid}: {e}")
+                    continue
+
+            if count == 0:
+                print(f"No local series found for modality {modality}")
 
     def __repr__(self) -> str:
         return (

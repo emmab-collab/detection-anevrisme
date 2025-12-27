@@ -2,11 +2,11 @@
 
 Ce dossier contient les notebooks Jupyter pour l'analyse et le développement du projet de détection d'anévrismes.
 
-## 📋 Vue d'ensemble
+## Vue d'ensemble
 
 Les notebooks sont organisés par étapes du workflow de machine learning, de l'exploration des données jusqu'à l'inférence.
 
-## 📚 Liste des notebooks
+## Liste des notebooks
 
 ### [01_exploration_donnees.ipynb](01_exploration_donnees.ipynb)
 **Objectif** : Exploration et nettoyage des données DICOM
@@ -89,7 +89,7 @@ Les notebooks sont organisés par étapes du workflow de machine learning, de l'
 
 ---
 
-## 🚀 Ordre d'exécution recommandé
+## Ordre d'exécution recommandé
 
 ```
 01 → 02 → 05 → 03 → 06 → 04
@@ -104,7 +104,7 @@ EDA  Data  Aug  Train Error Infer
 5. **06_gestion_erreurs** - Analyser les erreurs
 6. **04_inference** - Faire des prédictions
 
-## 💻 Configuration requise
+## Configuration requise
 
 ### Imports du package `src/`
 
@@ -139,7 +139,7 @@ ANEURYSM DETECTION/
 └── results/
 ```
 
-## 📝 Notes importantes
+## Notes importantes
 
 ### Nettoyage des outputs
 
@@ -168,7 +168,7 @@ DATA_DIR = "../data"
 DATA_DIR = "/kaggle/input/rsna-intracranial-aneurysm-detection"
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 **Import Error du package src/** :
 ```python
@@ -187,6 +187,6 @@ sys.path.append("../")  # ou chemin absolu
 - Traiter les données par lots
 - Utiliser un subset pour les tests
 
-## 📧 Contact
+## Contact
 
 Pour toute question sur les notebooks, consultez la documentation du package `src/` ou ouvrez une issue.
