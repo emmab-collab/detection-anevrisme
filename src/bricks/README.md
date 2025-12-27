@@ -158,11 +158,11 @@ print(prediction)
 # {'volume_prob': 0.87, 'volume_label': 1, 'n_cubes': 150, 'top_k_probs': [0.95, 0.92, ...]}
 ```
 
-## 🚀 Usage - Pipeline Complet
+## Usage - Pipeline Complet
 
 Voir le notebook [`00_orchestration.ipynb`](../../notebooks/00_orchestration.ipynb) pour un exemple complet d'utilisation de tous les composants ensemble.
 
-## 📁 Structure des Fichiers
+## Structure des Fichiers
 
 ```
 src/bricks/
@@ -176,7 +176,7 @@ src/bricks/
 └── README.md           # Ce fichier
 ```
 
-## 🔧 Extension
+## Extension
 
 Pour ajouter un nouveau composant :
 
@@ -186,7 +186,7 @@ Pour ajouter un nouveau composant :
 4. L'ajouter à `src/__init__.py`
 5. Documenter dans ce README
 
-## 💡 Principes de Design
+## Principes de Design
 
 Chaque classe suit ces principes :
 
@@ -196,7 +196,7 @@ Chaque classe suit ces principes :
 - **Testabilité** : Code isolé et facile à tester
 - **Documentation** : Docstrings NumPy complètes
 
-## 📚 Documentation Complète
+## Documentation Complète
 
 Chaque classe contient des docstrings détaillées avec :
 - Description
